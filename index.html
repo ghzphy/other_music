@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>music</title>
+  <style type="text/css">
+    /*实现背景图片透明，内容不透明*/
+    #music {
+      width: 500px;
+      height: 500px;
+      border-radius: 10px;
+      margin: 20px auto;
+      position: relative;
+      background: url(./image/1.jpg) no-repeat;
+      background-size: cover;
+      text-align: center;
+    }
+    #container {
+      position: absolute;
+      left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 500px;
+        height: 500px;
+        text-align: center;
+        background:rgba(255,255,255,0.6);
+    }
+    /*实现背景图片透明，内容不透明*/
+
+    #musicImg {
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+    }
+    audio {
+      display: block;
+      margin: 20px auto;
+    }
+    #musicName {
+      padding-top: 10px;
+      line-height: 30px;
+      color: #cc1b1b;
+    }
+    .btn>button {
+      width: 60px;
+      height: 30px;
+      border-radius: 10px;
+      background: skyblue;
+    }
+  </style>
+</head>
+<body>
+  <div id="music">
+    <div id="container">
+      <h3 id="musicName">久石让_菊次郎的夏天</h3>
+      <img src="image/1.jpg" id="musicImg">
+      <audio src="./music/久石让_菊次郎的夏天.mp3" controls id="audio"></audio>
+      <div class="btn">
+        <button id="play">播放</button>
+        <button id="pause">暂停</button>
+        <button id="prev">上一曲</button>
+        <button id="next">下一曲</button>
+        <button id="rand">随机</button>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript">
+    var play = document.getElementById('play'),
+      pause = document.getElementById('pause'),
+      prev = document.getElementById('prev'),
+      next = document.getElementById('next'),
+      rand = document.getElementById('rand')
+      musicName = document.getElementById('musicName'),
+      musicImg = document.getElementById('musicImg'),
+      bgImage = document.getElementById('music');
+
+    var music = new Array();
+    music = ['Beyond_光辉岁月', 'Beyond_喜欢你', 'Beyond_大地', 'Beyond_海阔天空', 'Beyond_真的爱你', 'Tfboys_剩下的盛夏', 'Tfboys_想唱就唱', 'Tfboys_魔法城堡', '丁当_如果还有明天', '久石让_菊次郎的夏天', '付辛博_这一刻爱吧', '光良_童话', '刀郎_十送红军', '刘德华_冰雨', '刘德华_回家的路', '刘惜君_那时候的我', '刘若英_后来', '卓依婷_八仙齐拜年', '卓依婷_好年头好兆头', '卓依婷_好运来', '卓依婷_恭喜发财', '卓依婷_拜年', '卓依婷_新春喜事', '卓依婷_财神来到我家门', '南京外国语学校高三六班_北京东路的日子', '古巨基_突然好想你', '周笔畅_慢慢', '姚贝娜_矜持', '庞龙_兄弟干杯', '张靓颖_终于等到你', '徐佳莹_修炼爱情', '李圣杰_手放开', '李荣浩_老街', '李行亮_愿得一人心', '杨宗纬_空白格', '林俊杰_当你', '林宥嘉_我只在乎你', '林志炫_单身情歌', '林志炫_烟花易冷', '梁静茹_会呼吸的痛', '梁静茹_分手快乐', '梁静茹_勇气', '梁静茹_可惜不是你', '汪苏泷_专属味道', '汪苏泷_他的爱', '汪苏泷_小星星', '汪苏泷_有点甜', '汪苏泷_雾都孤儿', '沙宝亮_时间都去哪了', '海龟先生_男孩别哭', '献给爱丽丝', '王菲_匆匆那年', '王菲_红豆', '田馥甄_小幸运', '筷子兄弟_小苹果', '筷子兄弟_父亲', '老狼_同桌的你', '莫文蔚_外面的世界', '萧敬腾_王妃', '薛之谦_意外', '薛之谦_演员', '薛之谦_绅士', '薛之谦_认真的雪', '许佳慧_预谋', '许嵩_千古', '许嵩_半城烟沙', '许嵩_双人旁', '许嵩_如果当时', '许嵩_山水之间', '许嵩_幻听', '许嵩_想象之中', '许嵩_玫瑰花的葬礼', '许篙_你若化成风', '许茹芸_为你我受冷风吹', '谭维维_三十岁的女人', '赵咏华_最浪漫的事', '逃跑计划_夜空中最亮的星', '邓丽君_月亮代表我的心', '邓紫棋_你把我灌醉', '邓紫棋_后会无期', '邓紫棋_喜欢你', '邓紫棋_泡沫', '邓紫棋_龙卷风', '那英_默', '邱永传_十一年', '邱永传_十二年', '郁可唯_如果云知道', '郁可唯_时间煮雨', '郑源_爱情码头', '陈一发_童话镇', '陈小春_我爱的人', '陈瑞_白狐', '陈绮贞_天天想你', '韩红_红蔷薇', '马頔_南山南', '齐晨_咱们结婚吧', '齐秦_火柴天堂'];
+    var len = music.length;
+    var num = 0;
+    var img_num = 0;
+
+    // 播放
+    play.onclick = function(){
+      if(audio.paused){
+        audio.play();
+      }
+    }
+
+    // 暂停
+    pause.onclick = function(){
+      if(audio.played){
+        audio.pause();
+      }
+    }
+
+    // 上一首
+    prev.onclick = function(){
+      num = (num + len - 1) % len;
+      img_num = Math.floor(Math.random() * 12);
+      audio.src = './music/' + music[num] + '.mp3';
+      musicName.innerHTML = music[num];
+      bgImage.style.backgroundImage = 'url(./image/' + String(img_num) + '.jpg)';
+      musicImg.src = './image/' + String(img_num) + '.jpg' ;
+      audio.play();
+    }
+
+    // 下一首
+    next.onclick = function(){
+      num = (num + 1) % len;
+      img_num = Math.floor(Math.random() * 12);
+      audio.src = './music/' + music[num] + '.mp3';
+      musicName.innerHTML = music[num];
+      bgImage.style.backgroundImage = 'url(./image/' + String(img_num) + '.jpg)';
+      musicImg.src = './image/' + String(img_num) + '.jpg' ;
+      audio.play();
+    }
+
+
+    // 随机
+    rand.onclick = function(){
+      num = Math.floor(Math.random() * (len-1));
+      img_num = Math.floor(Math.random() * 12);
+      audio.src = './music/' + music[num] + '.mp3';
+      musicName.innerHTML = music[num];
+      bgImage.style.backgroundImage = 'url(./image/' + String(img_num) + '.jpg)';
+      musicImg.src = './image/' + String(img_num) + '.jpg' ;
+      audio.play();
+    }
+
+
+    // 自动切换下一首
+    audio.addEventListener('ended',function(){
+      next.onclick();
+    },false);
+  </script>
+</body>
+</html>
